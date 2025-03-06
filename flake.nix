@@ -102,7 +102,13 @@
         in
         {
           nushell = buildPackage (./crates/nu-cli/Cargo.toml) (with pkgs; [ pkg-config ]) {
+            env = {
+              OPENSSL_DIR = pkgs.openssl.dev;
+              OPENSSL_LIB_DIR = "${pkgs.lib.getLib pkgs.openssl}/lib";
+              OPENSSL_NO_VENDOR = 1;
+            };
             postCheck = ''
+              use toolkit.nu
               toolkit test
             '';
           };
